@@ -72,17 +72,21 @@ Scanner → Parser → Writer → Reporter
 ### Docker (рекомендуется)
 
 ```bash
-# клонировать репозиторий
-git clone <repo> .
-cd device-reporter
+# клонировать проект
+git clone https://github.com/kurochkinivan/Device-Reporter.git
+cd Device-Reporter
 
 # поднять всё окружение (БД + миграции + сервис)
 docker compose up --build -d
 
-# положить TSV файл в директорию для обработки (там уже лежит один файл)
-cp your_data.tsv input/
+# если хочешь обработать свой файл:
+cp your_data.tsv input/ 
 
-# проверить что данные появились
+# в директории input/ уже лежит example.data.tsv
+# сервис обработает его автоматически, PDF отчёты появятся в output/ 
+ls output/
+
+# получить данные через API
 curl "http://localhost:8080/api/v1/devices/<unit_guid>?page=1&limit=10"
 ```
 
