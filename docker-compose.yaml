@@ -1,0 +1,54 @@
+name: device-reporter
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: device_reporter
+      PGDATA: /var/lib/postgresql/data/pgdata
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d device_reporter"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  migrate:
+    build: .
+    command: [
+      "/bin/migrate",
+      "--type=up",
+      "--username=postgres",
+      "--password=postgres",
+      "--host=postgres",
+      "--port=5432",
+      "--db=device_reporter"
+    ]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: on-failure
+
+  app:
+    build: .
+    command: ["/bin/device_reporter", "--config=/app/config.docker.yaml"]
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./config.docker.yaml:/app/config.docker.yaml
+      - ./input:/app/input
+      - ./output:/app/output
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+volumes:
+  pgdata:
