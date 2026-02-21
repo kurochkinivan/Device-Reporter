@@ -52,6 +52,7 @@ func flags() []cli.Flag {
 			Name:      "watch-dir",
 			Aliases:   []string{"w"},
 			Usage:     "Set directory to watch for new files",
+			Value:     "input",
 			Sources:   cli.NewValueSourceChain(yaml.YAML("app.watch_dir", altsrc.NewStringPtrSourcer(&config))),
 			Required:  true,
 			Validator: validateDirectory,
@@ -60,6 +61,7 @@ func flags() []cli.Flag {
 			Name:      "reports-dir",
 			Aliases:   []string{"r"},
 			Usage:     "Set directory to write reports to",
+			Value:     "output",
 			Sources:   cli.NewValueSourceChain(yaml.YAML("app.reports_dir", altsrc.NewStringPtrSourcer(&config))),
 			Required:  true,
 			Validator: validateDirectory,
@@ -67,6 +69,7 @@ func flags() []cli.Flag {
 		&cli.DurationFlag{
 			Name:     "scan-interval",
 			Aliases:  []string{"s"},
+			Value:    3 * time.Second,
 			Usage:    "Set directory scan interval",
 			Sources:  cli.NewValueSourceChain(yaml.YAML("app.scan_interval", altsrc.NewStringPtrSourcer(&config))),
 			Required: true,
@@ -74,12 +77,14 @@ func flags() []cli.Flag {
 		&cli.StringFlag{
 			Name:     "pg-host",
 			Usage:    "Set PostgreSQL host",
+			Value:    "localhost",
 			Sources:  cli.NewValueSourceChain(yaml.YAML("postgresql.host", altsrc.NewStringPtrSourcer(&config))),
 			Required: true,
 		},
 		&cli.StringFlag{
 			Name:     "pg-port",
 			Usage:    "Set PostgreSQL port",
+			Value:    "5432",
 			Sources:  cli.NewValueSourceChain(yaml.YAML("postgresql.port", altsrc.NewStringPtrSourcer(&config))),
 			Required: true,
 		},
@@ -98,6 +103,7 @@ func flags() []cli.Flag {
 		&cli.StringFlag{
 			Name:     "pg-dbname",
 			Usage:    "Set PostgreSQL database name",
+			Value:    "device_reporter",
 			Sources:  cli.NewValueSourceChain(yaml.YAML("postgresql.dbname", altsrc.NewStringPtrSourcer(&config))),
 			Required: true,
 		},
