@@ -1,0 +1,10 @@
+BEGIN;
+
+DROP INDEX IF EXISTS idx_devices_unit_guid;
+
+DROP TABLE IF EXISTS devices;
+DROP TABLE IF EXISTS files;
+
+DROP TYPE IF EXISTS files_status;
+
+COMMIT;
