@@ -1,0 +1,50 @@
+version: '3'
+
+vars:
+  DB_USER: postgres
+  DB_PASS: postgres
+  DB_HOST: localhost
+  DB_PORT: 5432
+  DB_NAME: device_reporter
+
+tasks:
+  start:
+    desc: "start the service with config file"
+    cmds:
+      - go run ./cmd/device_reporter -c config.local.yaml
+  
+  build:
+    desc: "build the device reporter service"
+    cmds:
+      - go build -ldflags "-X main.version=1.0.0" -o ./bin/device_reporter ./cmd/device_reporter
+
+  tests:
+    desc: "run tests"
+    cmds:
+      - go test -v ./...
+
+  migrate_up:
+    aliases: [m_up]
+    desc: "migrate up"
+    cmds:
+      - |
+        go run cmd/migrator/main.go \
+          --type=up \
+          --username={{.DB_USER}} \
+          --password={{.DB_PASS}} \
+          --host={{.DB_HOST}} \
+          --port={{.DB_PORT}} \
+          --db={{.DB_NAME}}
+
+  migrate_down:
+    aliases: [m_down]
+    desc: "migrate down"
+    cmds:
+      - |
+        go run cmd/migrator/main.go \
+          --type=down \
+          --username={{.DB_USER}} \
+          --password={{.DB_PASS}} \
+          --host={{.DB_HOST}} \
+          --port={{.DB_PORT}} \
+          --db={{.DB_NAME}}
