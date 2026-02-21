@@ -1,0 +1,18 @@
+app:
+  scan_interval: 1s
+  watch_dir: input/
+  reports_dir: output/
+  
+postgresql:
+  host: localhost
+  port: 5432
+  username: postgres
+  password: postgres
+  dbname: device_reporter
+
+http:
+  host: localhost
+  port: 8080
+  idle_timeout: 5m
+  read_timeout: 10s
+  write_timeout: 10s
